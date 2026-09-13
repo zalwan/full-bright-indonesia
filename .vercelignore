@@ -1,0 +1,5 @@
+.vercel
+storage/inertia-devtools
+storage/logs
+node_modules
+public/hot

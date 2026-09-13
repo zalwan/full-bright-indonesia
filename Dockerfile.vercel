@@ -47,6 +47,9 @@ RUN rm -f bootstrap/cache/packages.php bootstrap/cache/services.php \
 FROM base AS runtime
 
 COPY --from=builder --chown=www-data:www-data /app /app
+# Jaminan: file hot (dev) tidak boleh ada di production —
+# konteks build Vercel tidak selalu menghormati .dockerignore.
+RUN rm -f /app/public/hot
 COPY --chown=www-data:www-data Caddyfile /etc/frankenphp/Caddyfile
 
 RUN php artisan storage:link --no-interaction \
