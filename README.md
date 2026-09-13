@@ -2,9 +2,9 @@
 
 Pixel-perfect rebuild of https://toefl.fullbrightindonesia.org/c10-lp on top of the PBM Laravel + Inertia + React boilerplate (mode `ctwa`, analytics internal aktif).
 
-- **Live demo**: [ISI SETELAH DEPLOY]
+- **Live demo**: https://full-bright-indonesia.vercel.app
 - **Referensi desain**: https://toefl.fullbrightindonesia.org/c10-lp
-- **Kredensial admin demo**: email `demo@gmail.com` / password `demo12345` (login di `/login`, dashboard di `/admin`)
+- **Kredensial admin demo**: email `demo@gmail.com` / password `DemoC10-2026!` (login di `/login`, dashboard di `/admin`)
 
 ## Cara menjalankan lokal (Docker, tanpa PHP di host)
 

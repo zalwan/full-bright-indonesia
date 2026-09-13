@@ -29,3 +29,5 @@ yarn-error.log
 /.zed
 new/
 admin.md
+.vercel
+.env*
