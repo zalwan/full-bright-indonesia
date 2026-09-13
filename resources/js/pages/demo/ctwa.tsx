@@ -197,10 +197,14 @@ const gSideStyle = (side: 'prev' | 'next', gIdx: number): string => {
 };
 
 const KEYFRAMES = `
-  body { margin: 0; font-family: 'Nunito', system-ui, sans-serif; }
-  h1, h2, h3, h4, h5, h6, p, span, div, li, a, button, input, select, textarea, ul, ol, strong, b, em, i, label { font-family: 'Nunito', system-ui, sans-serif; }
-  a { color: #D70808; }
-  a:hover { color: #b30606; }
+  /* Aturan elemen dibungkus @layer base agar utilities Tailwind (layer utilities)
+     tetap menang untuk class berwarna — sama seperti cascade di situs referensi. */
+  @layer base {
+    body { margin: 0; font-family: 'Nunito', system-ui, sans-serif; }
+    h1, h2, h3, h4, h5, h6, p, span, div, li, a, button, input, select, textarea, ul, ol, strong, b, em, i, label { font-family: 'Nunito', system-ui, sans-serif; }
+    a { color: #D70808; }
+    a:hover { color: #b30606; }
+  }
   @keyframes infiniteScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   @keyframes fbFadeInUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
   @keyframes fbSheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -628,7 +632,7 @@ export default function CtwaDemo({
                                             action="scroll"
                                             label="Mulai Persiapan TOEFL"
                                             href="#pricing"
-                                            className="[display:inline-flex] [align-items:center] [justify-content:center] [gap:8px] [border-radius:16px] [padding:34px_76px] [font-size:27px] [font-weight:700] [color:#fff] [box-shadow:0_4px_20px_rgba(215,8,8,0.35)] [background:#D70808] [text-decoration:none] max-[500px]:[box-sizing:border-box] max-[500px]:[width:100%] max-[500px]:[padding:clamp(10px,3vw,14px)_clamp(16px,5vw,28px)] max-[500px]:[font-size:clamp(12px,3.6vw,16px)]"
+                                            className="[display:inline-flex] [align-items:center] [justify-content:center] [gap:8px] [border-radius:16px] [padding:14px_28px] [font-size:16px] [font-weight:700] [color:#fff] [box-shadow:0_4px_20px_rgba(215,8,8,0.35)] [background:#D70808] [text-decoration:none] max-[500px]:[box-sizing:border-box] max-[500px]:[width:100%] max-[500px]:[padding:clamp(10px,3vw,14px)_clamp(16px,5vw,28px)] max-[500px]:[font-size:clamp(12px,3.6vw,16px)]"
                                         >
                                             Mulai Persiapan TOEFL →
                                         </TrackedCTA>
@@ -637,7 +641,7 @@ export default function CtwaDemo({
                                             action="scroll"
                                             label="Lihat Bukti Alumni"
                                             href="#testimonials"
-                                            className="[display:inline-flex] [align-items:center] [justify-content:center] [gap:8px] [border-radius:16px] [padding:3px_9px] [font-size:10px] [font-weight:700] [color:#151515] [border:2px_solid_#D70808] [text-decoration:none] max-[500px]:[box-sizing:border-box] max-[500px]:[width:100%] max-[500px]:[padding:clamp(10px,3vw,14px)_clamp(16px,5vw,28px)] max-[500px]:[font-size:clamp(12px,3.6vw,16px)]"
+                                            className="[display:inline-flex] [align-items:center] [justify-content:center] [gap:8px] [border-radius:16px] [padding:14px_28px] [font-size:16px] [font-weight:700] [color:#151515] [border:2px_solid_#D70808] [text-decoration:none] max-[500px]:[box-sizing:border-box] max-[500px]:[width:100%] max-[500px]:[padding:clamp(10px,3vw,14px)_clamp(16px,5vw,28px)] max-[500px]:[font-size:clamp(12px,3.6vw,16px)]"
                                         >
                                             Lihat Bukti Alumni →
                                         </TrackedCTA>
