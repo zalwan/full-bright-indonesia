@@ -1,0 +1,53 @@
+# Satu perintah: docker compose up --build
+# Akses: app http://localhost:8000, vite HMR http://localhost:5175
+# (5173 dipakai project lain di host ini, jadi vite digeser ke 5175)
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+      - "5175:5175"
+    volumes:
+      # Live-reload source dari host; vendor & node_modules tetap milik container
+      - .:/var/www/html
+      - vendor-cache:/var/www/html/vendor
+      - node-cache:/var/www/html/node_modules
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: pbm_landing_page
+      DB_USERNAME: pbm
+      DB_PASSWORD: secret
+    depends_on:
+      db:
+        condition: service_healthy
+    stdin_open: true
+    tty: true
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: pbm_landing_page
+      MYSQL_USER: pbm
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: rootsecret
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3307:3306" # host 3307 agar tidak tabrakan dengan mariadb lokal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootsecret"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  dbdata:
+  vendor-cache:
+  node-cache:
