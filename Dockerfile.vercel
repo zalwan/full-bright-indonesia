@@ -29,7 +29,9 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 COPY . .
-RUN npm run build \
+RUN php -v \
+    && php artisan wayfinder:generate --with-form --verbose \
+    && npm run build \
     && mkdir -p \
         storage/framework/cache \
         storage/framework/sessions \
