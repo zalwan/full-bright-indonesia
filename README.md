@@ -1,3 +1,47 @@
+# TOEFL Fullbright Indonesia C10 — Landing Page
+
+Pixel-perfect rebuild of https://toefl.fullbrightindonesia.org/c10-lp on top of the PBM Laravel + Inertia + React boilerplate (mode `ctwa`, analytics internal aktif).
+
+- **Live demo**: [ISI SETELAH DEPLOY]
+- **Referensi desain**: https://toefl.fullbrightindonesia.org/c10-lp
+- **Kredensial admin demo**: email `demo@gmail.com` / password `demo12345` (login di `/login`, dashboard di `/admin`)
+
+## Cara menjalankan lokal (Docker, tanpa PHP di host)
+
+```bash
+docker compose up --build
+```
+
+Buka `http://localhost:8000` (landing page), `http://localhost:8000/login` (admin), Vite HMR di `:5175`. Entrypoint otomatis: copy `.env`, migrate, storage:link, `key:generate`, lalu `artisan serve` + `npm run dev` bersamaan. MySQL tersedia di host port `3307` (user `pbm` / `secret`).
+
+Buat admin baru bila perlu:
+
+```bash
+docker compose exec app php artisan pbm:create-admin --name="Nama" --email="x@y.z" --password="min8karakter"
+```
+
+## Cara menjalankan lokal (tanpa Docker)
+
+Butuh PHP ≥8.4.1 (lihat `composer.lock`), Composer 2, Node ≥22.13, MySQL. Ikuti panduan boilerplate di bawah (bagian 2–5), dengan `.env`:
+
+```dotenv
+APP_NAME="TOEFL Fullbright Indonesia C10"
+CLIENT_ID=fullbright-c10
+PROJECT_MODE=ctwa
+PAYMENT_MODE=none
+WHATSAPP_NUMBER=6285255499299
+```
+
+## Catatan implementasi
+
+- Halaman: `resources/js/pages/demo/ctwa.tsx` (dari `LP.tsx` + `public/assets/`). Semua 38 CTA memakai `TrackedCTA` (WhatsApp → `whatsapp_lead`, checkout eksternal → `direct_checkout`, navigasi section → `intent`).
+- Nomor WA mengikuti `.env` (`WHATSAPP_NUMBER`); tombol checkout mengikuti `EXTERNAL_CHECKOUT_URL` bila diisi.
+- Font Nunito dimuat via Bunny di `vite.config.ts`.
+- 2 aset tidak tersedia di paket (`diagnostic.gif`, `beranda.gif`) → placeholder + komentar `TODO(aset)` di kode.
+- Perbaikan vs file sumber: style global `a { color }` dibungkus `@layer base` (agar utilities Tailwind v4 menang, sesuai render referensi), ukuran CTA hero disamakan dengan referensi, 3 bug syntax/JSX diperbaiki.
+
+---
+
 # PBM Landing Page Boilerplate
 
 Boilerplate ini adalah fondasi siap pakai untuk membuat landing page dengan Laravel, Inertia, React, analytics internal, dashboard A/B testing, dan integrasi marketing. **Boilerplate** berarti project dasar yang dapat disalin dan disesuaikan untuk klien baru tanpa membangun sistem pendukung dari awal.
