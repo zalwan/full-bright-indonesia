@@ -29,7 +29,11 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 COPY . .
-RUN php -v \
+# COPY membawa manifest package:discover milik host (dengan dev deps).
+# Buang dan generate ulang sesuai vendor --no-dev agar artisan bisa boot.
+RUN rm -f bootstrap/cache/packages.php bootstrap/cache/services.php \
+    && php artisan package:discover --ansi \
+    && php -v \
     && php artisan wayfinder:generate --with-form --verbose \
     && npm run build \
     && mkdir -p \
