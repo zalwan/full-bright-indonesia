@@ -1,0 +1,64 @@
+# Production image untuk Vercel (container-backed function, FrankenPHP + Caddy).
+# Lihat: https://vercel.com/kb/guide/laravel-php-with-docker
+# Dipakai Vercel saat deploy (entrypoint: Dockerfile.vercel). BUKAN untuk dev lokal (pakai Dockerfile + compose.yaml).
+
+FROM dunglas/frankenphp:1-php8.4-bookworm AS base
+
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && install-php-extensions pdo_mysql mbstring intl zip bcmath gd pcntl opcache
+
+WORKDIR /app
+
+# ---- Builder: PHP deps + Vite build (wayfinder:generate butuh keduanya) ----
+FROM base AS builder
+
+COPY --from=node:22-bookworm-slim /usr/local/bin/ /usr/local/bin/
+COPY --from=node:22-bookworm-slim /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY composer.json composer.lock ./
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-progress \
+    --no-scripts \
+    --optimize-autoloader \
+    --prefer-dist
+
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+COPY . .
+RUN npm run build \
+    && mkdir -p \
+        storage/framework/cache \
+        storage/framework/sessions \
+        storage/framework/views \
+        bootstrap/cache \
+    && composer dump-autoload --no-dev --classmap-authoritative
+
+# ---- Runtime ----
+FROM base AS runtime
+
+COPY --from=builder --chown=www-data:www-data /app /app
+COPY --chown=www-data:www-data Caddyfile /etc/frankenphp/Caddyfile
+
+RUN php artisan storage:link --no-interaction \
+    && php artisan event:cache --no-interaction \
+    && php artisan view:cache --no-interaction \
+    && setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/frankenphp \
+    && chown -R www-data:www-data /config/caddy /data/caddy storage bootstrap/cache
+
+# Nilai default production. Secret (APP_KEY, DB_*) diisi via Vercel env vars.
+# SESSION/CACHE database agar sesi & analytics konsisten antar instance.
+ENV PORT=80 \
+    APP_ENV=production \
+    APP_DEBUG=false \
+    LOG_CHANNEL=stderr \
+    SESSION_DRIVER=database \
+    CACHE_STORE=database \
+    QUEUE_CONNECTION=sync
+
+USER www-data
+
+CMD ["frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile"]
