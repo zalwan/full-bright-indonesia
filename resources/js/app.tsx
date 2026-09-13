@@ -1,4 +1,5 @@
 import { createInertiaApp } from '@inertiajs/react';
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { lazy, Suspense } from 'react';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -11,6 +12,11 @@ const appName = import.meta.env.VITE_APP_NAME || 'PBM Landing Page';
 
 createInertiaApp({
     title: (title) => (title ? `${title}` : appName),
+    resolve: (name) =>
+        resolvePageComponent(
+            `./pages/${name}.tsx`,
+            import.meta.glob('./pages/**/*.tsx'),
+        ) as any,
     layout: (name) => {
         switch (true) {
             case name.startsWith('auth/'):
