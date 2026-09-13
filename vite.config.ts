@@ -20,6 +20,10 @@ export default defineConfig({
                 bunny('Space Grotesk', {
                     weights: [600, 700],
                 }),
+                // Font utama desain TOEFL C10 (LP memakai Nunito 400-900).
+                bunny('Nunito', {
+                    weights: [400, 500, 600, 700, 800, 900],
+                }),
             ],
         }),
         inertia(),
