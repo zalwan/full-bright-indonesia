@@ -37,7 +37,7 @@ WHATSAPP_NUMBER=6285255499299
 - Halaman: `resources/js/pages/demo/ctwa.tsx` (dari `LP.tsx` + `public/assets/`). Semua 38 CTA memakai `TrackedCTA` (WhatsApp → `whatsapp_lead`, checkout eksternal → `direct_checkout`, navigasi section → `intent`).
 - Nomor WA mengikuti `.env` (`WHATSAPP_NUMBER`); tombol checkout mengikuti `EXTERNAL_CHECKOUT_URL` bila diisi.
 - Font Nunito dimuat via Bunny di `vite.config.ts`.
-- 2 aset tidak tersedia di paket (`diagnostic.gif`, `beranda.gif`) → placeholder + komentar `TODO(aset)` di kode.
+- Aset tambahan yang diterima belakangan sudah dipasang: `diagnostic-test.webp` + `dashboard-progress.webp` (menggantikan placeholder), screenshot skor `skor-*.webp` (547/543/563/560/507/513/537/560v2), dan `video-tour-lms.mp4` sebagai player di showcase LMS.
 - Perbaikan vs file sumber: style global `a { color }` dibungkus `@layer base` (agar utilities Tailwind v4 menang, sesuai render referensi), ukuran CTA hero disamakan dengan referensi, 3 bug syntax/JSX diperbaiki.
 
 ---

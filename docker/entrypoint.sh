@@ -60,8 +60,11 @@ php artisan optimize:clear --no-interaction || true
 
 echo "[entrypoint] up: http://localhost:8000 (vite HMR :5175)"
 
-# 6. Jalankan server + vite bersamaan (bind 0.0.0.0 agar bisa diakses dari host)
+# 6. Jalankan server + vite bersamaan (bind 0.0.0.0 agar bisa diakses dari host).
+# --no-reload penting: tanpa itu `serve` memfilter env worker hanya ke allowlist
+# (APP_ENV, PATH, ...) sehingga Laravel di worker tidak melihat DB_*/APP_KEY
+# (env() Laravel mengandalkan getenv) dan semua route web 500.
 exec npx concurrently -c "#93c5fd,#fdba74" \
-  "php artisan serve --host=0.0.0.0 --port=8000" \
+  "php artisan serve --host=0.0.0.0 --port=8000 --no-reload" \
   "npm run dev -- --host 0.0.0.0 --port 5175" \
   --names='server,vite'
